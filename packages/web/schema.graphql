@@ -1,0 +1,58 @@
+interface Node {
+    id: ID!
+}
+
+type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+}
+
+type Query {
+    apiVersion: String!
+    node(id: ID!): Node
+    nodes(ids: [ID!]!): [Node]!
+    users(after: String, before: String, first: Int, last: Int): UserConnection!
+}
+
+type Mutation {
+    createUser(input: UserCreateInput!): UserCreatePayload
+}
+
+type User implements Node {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    role: UserRole!
+}
+
+type UserConnection {
+    edges: [UserEdge]
+    pageInfo: PageInfo!
+}
+
+type UserEdge {
+    cursor: String!
+    node: User
+}
+
+input UserCreateInput {
+    clientMutationId: String
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    role: UserRole!
+}
+
+type UserCreatePayload {
+    clientMutationId: String
+    error: String
+    message: String
+}
+
+enum UserRole {
+    OWNER, READ, READ_WRITE
+}
